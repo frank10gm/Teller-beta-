@@ -1,3 +1,4 @@
+import { SearchPageModule } from './../members/search/search.module';
 import { DashboardPageModule } from './../members/dashboard/dashboard.module';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
@@ -11,6 +12,7 @@ import { TabsPage } from './tabs.page';
 import { ContactPageModule } from '../contact/contact.module';
 import { AboutPageModule } from '../about/about.module';
 import { HomePageModule } from '../home/home.module';
+import { ProfilePageModule } from '../members/profile/profile.module';
 
 @NgModule({
   imports: [
@@ -21,7 +23,9 @@ import { HomePageModule } from '../home/home.module';
     HomePageModule,
     AboutPageModule,
     ContactPageModule,
-    DashboardPageModule
+    DashboardPageModule,
+    ProfilePageModule,
+    SearchPageModule
   ],
   declarations: [TabsPage]
 })
