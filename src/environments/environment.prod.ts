@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  mainEndpoint: 'https://www.hackweb.it/api/'
 };

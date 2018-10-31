@@ -15,7 +15,7 @@ export class AuthenticationService {
   constructor(private storage: Storage, private plt: Platform) { 
     this.plt.ready().then(() => {
       this.checkToken();
-      //add expired check here
+      // add expired check here
     });
   }
 
@@ -23,10 +23,10 @@ export class AuthenticationService {
     this.storage.get(TOKEN_KEY).then(res => {
       if (res) {
         this.authenticationState.next(1);
-      }else{
+      } else {
         this.authenticationState.next(2);
       }
-    })
+    });
   }
 
   login() {
