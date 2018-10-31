@@ -1,14 +1,33 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+  <ion-toolbar>    
     <ion-title>My Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
  
-<ion-content padding>
- 
+<ion-content >
+  <ion-refresher slot="fixed">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- <ion-virtual-scroll [items]="items">
+    <ion-item *virtualItem="let item">
+      {{ item }}
+    </ion-item>
+  </ion-virtual-scroll> -->
+
+  <ion-card>
+    <ion-img src="/assets/myImg.png"></ion-img>
+    <ion-card-header>
+      <ion-card-title>Hello World</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>The content for this card</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

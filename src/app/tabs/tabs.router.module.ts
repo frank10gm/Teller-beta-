@@ -1,11 +1,9 @@
+import { ProfilePage } from './../members/profile/profile.page';
+import { SearchPage } from './../members/search/search.page';
 import { DashboardPage } from './../members/dashboard/dashboard.page';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { TabsPage } from './tabs.page';
-import { HomePage } from '../home/home.page';
-import { AboutPage } from '../about/about.page';
-import { ContactPage } from '../contact/contact.page';
 
 const routes: Routes = [
   {
@@ -23,14 +21,14 @@ const routes: Routes = [
         component: DashboardPage
       },
       {
-        path: 'about',
-        outlet: 'about',
-        component: AboutPage
+        path: 'search',
+        outlet: 'search',
+        component: SearchPage
       },
       {
-        path: 'contact',
-        outlet: 'contact',
-        component: ContactPage
+        path: 'profile',
+        outlet: 'profile',
+        component: ProfilePage
       }
     ]
   },
