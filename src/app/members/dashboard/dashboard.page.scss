@@ -1,0 +1,14 @@
+:host{
+    $black: #000;
+    .post-head{
+        display: flex;
+        align-items: center;
+
+        .person-img{
+            margin-right: 20px;
+        }
+        h2{
+            color: $black;
+        }
+    }       
+}

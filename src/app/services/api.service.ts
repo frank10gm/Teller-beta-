@@ -12,19 +12,19 @@ export class ApiService {
   postsSubject = new BehaviorSubject<any>({});
   posts$: Observable<any>;
 
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Authorization': 'my-auth-token'
+    })
+  };
+
   constructor(private http: HttpClient) {
     //
     this.posts$ = this.postsSubject;
   }
 
-  getPosts() {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Authorization': 'my-auth-token'
-      })
-    };
-
+  getPosts() {    
     const sendData = {
       action: 'getPosts',
       num: '0',
@@ -33,14 +33,12 @@ export class ApiService {
       lat: '40',
       lng: '11',
       user_id: 0
-    };
+    };    
 
-    console.log('dev10', environment.mainEndpoint);
-
-    this.http.post(environment.mainEndpoint, sendData, httpOptions)
+    this.http.post(environment.mainEndpoint, sendData, this.httpOptions)
     .pipe(
       tap(resp => {
-        console.log(resp);
+        // console.log(resp);
       })
     ).subscribe(resp => {
       this.postsSubject.next(resp);

@@ -9,21 +9,24 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <!-- <ion-virtual-scroll [items]="items">
-    <ion-item *virtualItem="let item">
-      {{ item }}
-    </ion-item>
-  </ion-virtual-scroll> -->
+  <ion-virtual-scroll [items]="posts$ | async" approxItemHeight="200px">
+    <ion-card *virtualItem="let post">      
+      <ion-card-content>
+        <div class="post-head">
+          <ion-avatar slot="start" class="person-img">
+            <ion-img src="https://beta.ionicframework.com/docs/content/component-preview-app/docs-www/assets/img/avatar-finn.png"></ion-img>
+          </ion-avatar>
+          <div class="person-info">
+            <h2>Finn</h2>
+            <h3>I'm a big deal</h3>          
+          </div>
+        </div>
+        <div class="post-content">
 
-  <ion-card>
-    <ion-img src="/assets/myImg.png"></ion-img>
-    <ion-card-header>
-      <ion-card-title>Hello World</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p>The content for this card</p>
-    </ion-card-content>
-  </ion-card>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-virtual-scroll>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
