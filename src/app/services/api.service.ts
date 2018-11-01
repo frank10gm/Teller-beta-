@@ -3,14 +3,16 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { tap, map } from 'rxjs/operators';
+import { send } from 'q';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  postsSubject = new BehaviorSubject<any>({});
-  posts$: Observable<any>;
+  postsSubject = new BehaviorSubject<any[]>([]);
+  posts$: Observable<any[]>;
+  isLoading = new BehaviorSubject<boolean>(false);
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -24,24 +26,28 @@ export class ApiService {
     this.posts$ = this.postsSubject;
   }
 
-  getPosts() {    
+  getPosts(data: any) {    
     const sendData = {
-      action: 'getPosts',
-      num: '0',
+      action: 'getPosts',      
       order: 'added',
       order2: '20',
       lat: '40',
       lng: '11',
-      user_id: 0
+      user_id: 0,
+      ...data
     };    
+    
+    this.isLoading.next(true);
 
-    this.http.post(environment.mainEndpoint, sendData, this.httpOptions)
+    return this.http.post<any[]>(environment.mainEndpoint, sendData, this.httpOptions)
     .pipe(
       tap(resp => {
-        // console.log(resp);
+        this.isLoading.next(false);
+        // console.log('dev13 isLoading')
       })
-    ).subscribe(resp => {
-      this.postsSubject.next(resp);
+    )
+    .subscribe(resp => {
+      this.postsSubject.next([...this.postsSubject.getValue(), ...resp]);
     });
   }
 }

@@ -1,24 +1,25 @@
 <ion-header>
   <ion-toolbar>    
-    <ion-title>My Dashboard</ion-title>
+    <ion-title>Teller</ion-title>
   </ion-toolbar>
 </ion-header>
  
 <ion-content >
-  <ion-refresher slot="fixed">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
-  <ion-virtual-scroll [items]="posts$ | async" approxItemHeight="200px">
-    <ion-card *virtualItem="let post">      
+  <!-- [items]="posts$ | async" -->
+  <ion-virtual-scroll [items]="posts$ | async" approxItemHeight="140px" approxFooterHeight="0px" approxHeaderHeight="0px">
+    <ion-card *virtualItem="let post" class="post-wrapper">      
       <ion-card-content>
         <div class="post-head">
           <ion-avatar slot="start" class="person-img">
-            <ion-img src="https://beta.ionicframework.com/docs/content/component-preview-app/docs-www/assets/img/avatar-finn.png"></ion-img>
+            <ion-img src="./assets/img/avatar-finn.png"></ion-img>
           </ion-avatar>
           <div class="person-info">
-            <h2>Finn</h2>
-            <h3>I'm a big deal</h3>          
+            <h2>{{post.creator}}</h2>
+            <h3>{{post.description}}</h3>          
           </div>
         </div>
         <div class="post-content">
@@ -28,9 +29,17 @@
     </ion-card>
   </ion-virtual-scroll>
 
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="infiniteLoad($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
 </ion-content>
