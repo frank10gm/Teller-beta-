@@ -1,5 +1,10 @@
 <ion-header>
   <ion-toolbar>    
+    <!-- <ion-buttons slot="end">
+      <ion-button (click)="openMessages()">
+        <ion-icon color="dark" slot="icon-only" name="mail"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
     <ion-title>Teller</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -8,26 +13,64 @@
 
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-  <!-- [items]="posts$ | async" -->
-  <ion-virtual-scroll [items]="posts$ | async" approxItemHeight="140px" approxFooterHeight="0px" approxHeaderHeight="0px">
-    <ion-card *virtualItem="let post" class="post-wrapper">      
+  </ion-refresher>  
+
+  <!-- <ion-virtual-scroll [items]="posts$ | async" approxItemHeight="270px"> -->
+    <ion-card *ngFor="let post of posts$ | async" class="post-wrapper">      
       <ion-card-content>
         <div class="post-head">
+          <ion-button class="person-more" size="small" color="dark" fill="clear" expand="block">
+            <ion-icon slot="start" name="more"></ion-icon>              
+          </ion-button>
           <ion-avatar slot="start" class="person-img">
             <ion-img src="./assets/img/avatar-finn.png"></ion-img>
           </ion-avatar>
           <div class="person-info">
-            <h2>{{post.creator}}</h2>
-            <h3>{{post.description}}</h3>          
+            <h2><span class="person-name">{{post.creator}}</span> <span class="person-follow"><ion-icon color="medium" name="pulse"></ion-icon> <span class="text">follow</span></span></h2>
+            <h3>Descrizione della persona</h3>   
+            <p class="post-time">
+              <ion-note class="smaller">
+                {{post.added}}ago
+              </ion-note>
+            </p>                   
           </div>
         </div>
         <div class="post-content">
-
+          {{post.description}}
+        </div>
+        <div class="audio-listener">
+          <ion-button size="small" color="primary" fill="clear" expand="block" (click)="playPost(post)">
+            <ion-icon class="big-icon" slot="start" [name]="(!post.audioPlaying) ? 'play' : 'pause'"></ion-icon>              
+          </ion-button>       
+          <ion-range [disabled]="!post.audioEnabled" step="0,1" color="primary" mode="md" [value]="post.elapsed" [max]="post.duration" (mouseup)="playFrom(post)" (ionChange)="audioChange($event, post)"></ion-range>
         </div>
       </ion-card-content>
+      <ion-grid>
+        <ion-row >
+          <ion-col class="post-numbers">
+            1K Plays, {{post.likes}} Likes, {{post.comments_count}} Comments
+          </ion-col>                        
+        </ion-row>        
+        <ion-row >
+          <ion-col class="post-actions">
+            <div class="start">             
+              <ion-button size="small" color="primary" fill="clear" expand="block">
+                <ion-icon class="big-icon" slot="start" name="heart-empty"></ion-icon>              
+              </ion-button>                      
+              <ion-button size="small" color="dark" fill="clear" expand="block">
+                <ion-icon class="big-icon" slot="start" name="text"></ion-icon>              
+              </ion-button>
+            </div>
+            <div class="end">
+              <ion-button size="small" color="dark" fill="clear" expand="block">
+                <ion-icon class="big-icon" slot="start" name="bookmark"></ion-icon>              
+              </ion-button>              
+            </div>
+          </ion-col>                    
+        </ion-row>
+      </ion-grid>
     </ion-card>
-  </ion-virtual-scroll>
+  <!-- </ion-virtual-scroll> -->
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="infiniteLoad($event)">
     <ion-infinite-scroll-content
@@ -38,7 +81,7 @@
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
+      <ion-icon name="microphone"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 

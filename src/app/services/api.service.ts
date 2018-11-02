@@ -26,7 +26,7 @@ export class ApiService {
     this.posts$ = this.postsSubject;
   }
 
-  getPosts(data: any) {    
+  getPosts(data: any, reset: boolean = false) {    
     const sendData = {
       action: 'getPosts',      
       order: 'added',
@@ -47,7 +47,8 @@ export class ApiService {
       })
     )
     .subscribe(resp => {
-      this.postsSubject.next([...this.postsSubject.getValue(), ...resp]);
+      if(reset) this.postsSubject.next([...resp]);      
+      else this.postsSubject.next([...this.postsSubject.getValue(), ...resp]);
     });
   }
 }

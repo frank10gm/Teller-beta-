@@ -1,27 +1,95 @@
 :host{
-    $black: #000;
+    $black: #222428;
     $dark: #888;
+    $small: 12px;
     .post-wrapper{
-        min-height: 120px;
-        max-height: 120px;
-    }
-    .post-head{
-        display: flex;
-        align-items: flex-start;
-        height: 75px;
-        overflow: hidden;
-
-        .person-img{
-            margin-right: 20px;
-            min-width: 64px;
-            min-height: 64px;
-            max-width: 64px;
-            max-height: 64px;
+        .big-icon{
+            font-size: 24px;
         }
-        h2{
-            color: $black;
+        // min-height: 250px;
+        // max-height: 250px;        
+        .smaller{
+            font-size: $small;
         }
-        h3{
+        .post-head{
+            display: flex;
+            align-items: flex-start;
+            height: 64px;
+            overflow: hidden;       
+            position: relative;     
+            .person-more{
+                position: absolute;
+                top: -8px;
+                right: -12px;
+            }
+            .person-follow{      
+                cursor: pointer;          
+                display: flex;
+                align-items: center;
+                .text{
+                    margin-left: 5px;
+                    color: $dark;
+                    font-size: $small;
+                }
+            }
+            .person-img{
+                margin-right: 20px;
+                min-width: 64px;
+                min-height: 64px;
+                max-width: 64px;
+                max-height: 64px;
+            }
+            .person-name{
+                margin-right: 8px;
+            }
+            h2{
+                color: $black;
+                display: flex;
+                align-items: center;
+            }
+            h3{
+                color: $dark;
+                max-height: 20px;
+                line-height: 20px;
+                overflow: hidden;
+            }
+            .post-time{
+                margin-top: -2px;
+            }
+        }  
+        .post-content{
+            margin-top: 20px;
+            line-height: 22px;
+            max-height: 44px;
+            overflow: hidden;
+        }
+        .audio-listener{
+            display: flex;
+            align-items: center;
+            margin-bottom: -20px;
+        }
+        .post-actions{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            .start{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+            }
+            .end{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-right: -8px;
+            }
+        }        
+        .post-numbers{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: $small;
             color: $dark;
         }
     }       
