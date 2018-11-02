@@ -28,24 +28,25 @@ export class PostCardComponent implements OnInit {
       this.audioService.audio.pause();    
       post.audioPlaying = false;
     }else{
-      this.audioService.audio.src = environment.mainEndpoint+'/uploads/audio/'+post.audio; //'0aa1883c6411f7873cb83dacb17b0afc.m4a';
-      this.audioService.audio.load();    
-
-      this.audioService.audio.ontimeupdate = (e) => {
-        this.handleTimeUpdate(post);
-      }
-
-      this.audioService.audio.onended = (e) => {
-        post.audioPlaying = false;
-        post.currentTime = 0;
-        post.elapsed = 0;
-      }
-
-      this.audioService.audio.onerror = (e) => {        
-        this.api.presentToast('There was an error with this audio file.')
-        post.audioEnabled = false;
-        post.audioPlaying = false;
-      }
+      if(this.audioService.audio.src != environment.mainEndpoint+'/uploads/audio/'+post.audio){
+        this.audioService.audio.src = environment.mainEndpoint+'/uploads/audio/'+post.audio; //'0aa1883c6411f7873cb83dacb17b0afc.m4a';
+        this.audioService.audio.load();  
+        this.audioService.audio.ontimeupdate = (e) => {
+          this.handleTimeUpdate(post);
+        }
+  
+        this.audioService.audio.onended = (e) => {
+          post.audioPlaying = false;
+          post.currentTime = 0;
+          post.elapsed = 0;
+        }
+  
+        this.audioService.audio.onerror = (e) => {        
+          this.api.presentToast('There was an error with this audio file.')
+          post.audioEnabled = false;
+          post.audioPlaying = false;
+        }
+      }              
 
       if(post.elapsed) this.audioService.audio.currentTime = post.elapsed;
       if(post.elapsed >= post.duration){
