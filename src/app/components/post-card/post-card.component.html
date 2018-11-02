@@ -1,3 +1,54 @@
-<p>
-  post-card works!
-</p>
+<ion-card mode="ios" class="post-wrapper">      
+  <ion-card-content>
+    <div class="post-head">
+      <ion-button class="person-more" size="small" color="dark" fill="clear" expand="block">
+        <ion-icon slot="start" name="more"></ion-icon>              
+      </ion-button>
+      <ion-avatar slot="start" class="person-img">
+        <ion-img src="./assets/img/avatar-finn.png"></ion-img>
+      </ion-avatar>
+      <div class="person-info">
+        <h2><span class="person-name">{{post.creator}}</span> <span class="person-follow"><ion-icon color="medium" name="pulse"></ion-icon> <span class="text">follow</span></span></h2>
+        <h3>Descrizione della persona</h3>   
+        <p class="post-time">
+          <ion-note class="smaller">
+            {{post.added}}ago
+          </ion-note>
+        </p>                   
+      </div>
+    </div>
+    <div class="post-content">
+      {{post.description}}
+    </div>
+    <div class="audio-listener">
+      <ion-button size="small" color="primary" fill="clear" expand="block" (click)="playPost(post)">
+        <ion-icon class="big-icon" slot="start" [name]="(!post.audioPlaying) ? 'play' : 'pause'"></ion-icon>              
+      </ion-button>       
+      <ion-range [disabled]="!post.audioEnabled" step="0,1" color="primary" mode="md" [value]="post.elapsed" [max]="post.duration" (mouseup)="playFrom(post)" (ionChange)="audioChange($event, post)"></ion-range>
+    </div>
+  </ion-card-content>
+  <ion-grid>
+    <ion-row >
+      <ion-col class="post-numbers">
+        1K Plays, {{post.likes}} Likes, {{post.comments_count}} Comments
+      </ion-col>                        
+    </ion-row>        
+    <ion-row >
+      <ion-col class="post-actions">
+        <div class="start">             
+          <ion-button size="small" color="primary" fill="clear" expand="block">
+            <ion-icon class="big-icon" slot="start" name="heart-empty"></ion-icon>              
+          </ion-button>                      
+          <ion-button size="small" color="dark" fill="clear" expand="block">
+            <ion-icon class="big-icon" slot="start" name="text"></ion-icon>              
+          </ion-button>
+        </div>
+        <div class="end">
+          <ion-button size="small" color="dark" fill="clear" expand="block">
+            <ion-icon class="big-icon" slot="start" name="bookmark"></ion-icon>              
+          </ion-button>              
+        </div>
+      </ion-col>                    
+    </ion-row>
+  </ion-grid>
+</ion-card>  

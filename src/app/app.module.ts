@@ -11,15 +11,14 @@ import { AppComponent } from './app.component';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
-import { PostCardComponent } from './components/post-card/post-card.component';
 
 @NgModule({
-  declarations: [AppComponent, PostCardComponent],
+  declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     IonicStorageModule.forRoot(),
     HttpClientModule
-  ],
+  ],  
   providers: [
     StatusBar,
     SplashScreen,
