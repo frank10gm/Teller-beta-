@@ -31,6 +31,7 @@ export class PostCardComponent implements OnInit {
       if(this.audioService.audio.src != environment.mainEndpoint+'/uploads/audio/'+post.audio){
         this.audioService.audio.src = environment.mainEndpoint+'/uploads/audio/'+post.audio; //'0aa1883c6411f7873cb83dacb17b0afc.m4a';
         this.audioService.audio.load();  
+
         this.audioService.audio.ontimeupdate = (e) => {
           this.handleTimeUpdate(post);
         }
@@ -46,15 +47,19 @@ export class PostCardComponent implements OnInit {
           post.audioEnabled = false;
           post.audioPlaying = false;
         }
+
+        this.audioService.audio.onloadeddata = (e) => {
+          if(post.elapsed) this.audioService.audio.currentTime = post.elapsed;          
+        }
       }              
 
       if(post.elapsed) this.audioService.audio.currentTime = post.elapsed;
       if(post.elapsed >= post.duration){
         this.audioService.audio.currentTime = 0;
-      }        
+      }
       post.audioEnabled = true;
-      post.audioPlaying = true;      
-      this.audioService.audio.play(); 
+      post.audioPlaying = true;            
+      this.audioService.audio.play();       
     }           
   }
 
