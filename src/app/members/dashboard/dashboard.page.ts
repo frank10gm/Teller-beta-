@@ -55,7 +55,7 @@ export class DashboardPage implements OnInit {
     // window.setInterval(()=>{ this.posts = [...this.posts] },2000);
 
     // audio gest
-    this.audioService.audioService.audio = new Audio();    
+    this.audioService.audio = new Audio();    
   }
 
   infiniteLoad(event){        
