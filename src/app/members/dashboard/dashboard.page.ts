@@ -31,8 +31,8 @@ export class DashboardPage implements OnInit {
     this.posts$ = this.api.posts$;
     this.posts$.pipe(
       tap(resp =>{        
-        if(this.infiniteEvent) this.infiniteEvent.complete();     
-        this.curPost += 20;        
+        if(this.infiniteEvent) this.infiniteEvent.complete();             
+        this.curPost = resp.length;             
         if(this.lastPost === resp.length){
           if(this.infiniteEvent) this.infiniteEvent.disabled = true;
         }else{
@@ -44,12 +44,12 @@ export class DashboardPage implements OnInit {
     });
 
     this.api.getPosts({
-      num: this.curPost
+      num: 0
     });
     this.audioService.audio = new Audio();    
   }
 
-  infiniteLoad(event){        
+  infiniteLoad(event){          
     this.api.getPosts({
       num: this.curPost
     })    

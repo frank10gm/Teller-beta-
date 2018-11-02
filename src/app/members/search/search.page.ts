@@ -14,6 +14,7 @@ export class SearchPage implements OnInit {
 
   @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;  
   public posts$: Observable<any[]>;
+  public postsSubject = new BehaviorSubject<any[]>([]);
   private curPost: number = 0;  
   private lastPost: number = 0;
   private infiniteEvent: any;
@@ -27,46 +28,60 @@ export class SearchPage implements OnInit {
 
   ngOnInit() {              
 
-    this.audioService.audio = new Audio();
+    this.audioService.audio = new Audio();    
+
+    this.posts$ = this.postsSubject;
     
-    this.posts$ = this.searchTerm.pipe(
-      tap(term => {
-        console.log('dev10n', term)
-      }),      
+    this.searchTerm.pipe(      
       debounceTime(300),
       distinctUntilChanged(),
+      tap(term => {
+        // console.log('dev10n', term)
+      }),      
       switchMap((term: string) => {
         if(term === '') return of([]);
         else return this.api.searchPosts({
-          num: this.curPost,
+          num: 0,
           searchTerm: term,
           order: 'added'
         }).pipe(
           catchError((e) => {
             console.log('error', e);
             return of([]);
-          }),
-          tap(resp => {      
-            if(!resp) return;
-            if(this.infiniteEvent) this.infiniteEvent.complete();     
-            this.curPost += 20;        
-            if(this.lastPost === resp.length){
-              if(this.infiniteEvent) this.infiniteEvent.disabled = true;
-            }else{
-              this.lastPost = resp.length;
-            }                
           })
         )
       })
-    );         
+    ).subscribe(resp => {            
+      this.postsSubject.next(resp);
+    });     
 
-    // this.searchTerm.subscribe
+    this.posts$.subscribe(resp => {          
+      if(!resp) return;
+      if(this.infiniteEvent) this.infiniteEvent.complete();     
+      this.curPost = resp.length;        
+      if(this.lastPost === resp.length){
+        if(this.infiniteEvent) this.infiniteEvent.disabled = true;
+      }else{
+        this.lastPost = resp.length;
+      } 
+    })
+        
   }
 
-  infiniteLoad(event){        
-    this.api.getPosts({
-      num: this.curPost
-    })    
+  infiniteLoad(event){            
+    this.api.searchPosts({
+      num: this.curPost,
+      searchTerm: this.searchTerm.getValue(),
+      order: 'added'
+    }).pipe(
+      catchError((e) => {
+        console.log('error', e);
+        return of([]);
+      })     
+    ).subscribe(resp => {      
+      this.postsSubject.next([...this.postsSubject.getValue(), ...resp]);
+    });
+    
     this.infiniteEvent = event.target;
   }
 
