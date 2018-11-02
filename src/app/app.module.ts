@@ -11,9 +11,10 @@ import { AppComponent } from './app.component';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
+import { PostCardComponent } from './components/post-card/post-card.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, PostCardComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     IonicStorageModule.forRoot(),
