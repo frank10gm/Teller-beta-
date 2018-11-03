@@ -32,7 +32,8 @@ export class AppComponent {
           this.router.navigate(['members', 'tabs']);
           // this.router.navigate(['login']);
         }else{
-          this.router.navigate(['splash']);
+          // this.router.navigate(['splash']);
+          this.router.navigate(['members', 'tabs']);
         }
       });
       
