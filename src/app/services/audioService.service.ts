@@ -10,6 +10,7 @@ import { send } from 'q';
 })
 export class AudioService {
 
+  curpost = new BehaviorSubject<any>({});
   audio;
 
   httpOptions = {

@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { AudioService } from '../../services/audioService.service';
 import { ToastController } from '@ionic/angular';
 import { ApiService } from '../../services/api.service';
+import { isDefaultChangeDetectionStrategy } from '@angular/core/src/change_detection/constants';
 
 @Component({
   selector: 'hw-post-card',
@@ -12,8 +13,8 @@ import { ApiService } from '../../services/api.service';
 })
 export class PostCardComponent implements OnInit {
 
-  @Input() post: any;
-  curpost: any;
+  @Input() post: any;  
+  lastaudiopos: any;
   
   constructor(
     private toast: ToastController,
@@ -22,7 +23,26 @@ export class PostCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+    //bind functions
+    this.audioService.audio.ontimeupdate = (e) => {
+      this.handleTimeUpdate(this.audioService.curpost.getValue());
+    }
+
+    this.audioService.audio.onended = (e) => {
+      this.audioService.curpost.getValue().audioPlaying = false;
+      this.audioService.curpost.getValue().currentTime = 0;
+      this.audioService.curpost.getValue().elapsed = 0;
+    }
+
+    this.audioService.audio.onerror = (e) => {        
+      this.api.presentToast('There was an error with this audio file.')
+      this.audioService.curpost.getValue().audioEnabled = false;
+      this.audioService.curpost.getValue().audioPlaying = false;
+    }
+
+    this.audioService.audio.onloadeddata = (e) => {
+      if(this.audioService.curpost.getValue().elapsed) this.audioService.audio.currentTime = this.audioService.curpost.getValue().elapsed;          
+    }
   }
 
   playPost(post){
@@ -30,44 +50,22 @@ export class PostCardComponent implements OnInit {
       this.audioService.audio.pause();
       post.audioPlaying = false;
       return;
-    }
+    }    
 
-    if(post != this.curpost){
-      //assing new post
-      this.curpost = post;
-
+    if(post !== this.audioService.curpost.getValue()){
       //pause previous
       this.audioService.audio.pause();
-      this.curpost.audioPlaying = false;
+      this.audioService.curpost.getValue().audioPlaying = false;
+
+      //assing new post   
+      this.audioService.curpost.next(post);                           
       
       //load new one
-      this.audioService.audio.src = environment.mainEndpoint+'/uploads/audio/'+'0aa1883c6411f7873cb83dacb17b0afc.m4a'; //post.audio; //'0aa1883c6411f7873cb83dacb17b0afc.m4a';
-      this.audioService.audio.load();  
-
-      //bind functions
-      this.audioService.audio.ontimeupdate = (e) => {
-        this.handleTimeUpdate(post);
-      }
-
-      this.audioService.audio.onended = (e) => {
-        post.audioPlaying = false;
-        post.currentTime = 0;
-        post.elapsed = 0;
-      }
-
-      this.audioService.audio.onerror = (e) => {        
-        this.api.presentToast('There was an error with this audio file.')
-        post.audioEnabled = false;
-        post.audioPlaying = false;
-      }
-
-      this.audioService.audio.onloadeddata = (e) => {
-        if(post.elapsed) this.audioService.audio.currentTime = post.elapsed;          
-      }
+      this.audioService.audio.src = environment.mainEndpoint+'/uploads/audio/'+post.audio; //'0aa1883c6411f7873cb83dacb17b0afc.m4a';
+      this.audioService.audio.load();        
     }                     
 
-    if(typeof post.elapsed != 'undefined') {
-      console.log('dev10', post.elapsed);
+    if(typeof post.elapsed != 'undefined') {      
       this.audioService.audio.currentTime = post.elapsed;      
       if(post.elapsed <= 0.1) this.audioService.audio.currentTime = 0;
       if(post.elapsed >= post.duration) this.audioService.audio.currentTime = 0;      
@@ -80,33 +78,39 @@ export class PostCardComponent implements OnInit {
   }
 
   handleTimeUpdate(post) {
-    const elapsed =  this.audioService.audio.currentTime;
-    const duration = this.audioService.audio.duration;    
-    post.position = elapsed / duration;
-    post.elapsed = (elapsed);
-    post.duration = (duration);
+    if(post === this.audioService.curpost.getValue()) {
+      if(!this.audioService.audio.paused){
+        const elapsed = this.audioService.audio.currentTime;
+        const duration = this.audioService.audio.duration;    
+        post.position = elapsed / duration;
+        post.elapsed = (elapsed);
+        post.duration = (duration);
+      }      
+    }    
   }
 
-  audioChange(e, post){        
-    console.log('dev11', post.elapsed);
-    post.elapsed = e.detail.value;     
-    console.log('dev12', post.elapsed);      
+  audioChange(e, post){            
+    this.lastaudiopos = e.detail.value;
+    if(post === this.audioService.curpost.getValue()) {
+      if(this.audioService.audio.paused) post.elapsed = e.detail.value;
+    }else post.elapsed = e.detail.value;         
   }
 
-  pauseFrom(post){    
-    // if(post === this.curpost) {
-    //   this.audioService.audio.pause();
-    //   post.audioPlaying = false;
-    //   this.audioService.audio.currentTime = post.elapsed;
-    // }
+  pauseFrom(post){        
+    if(post === this.audioService.curpost.getValue()) {
+      this.audioService.audio.pause();  
+      // post.audioPlaying = false;                      
+    }
   }
 
   playFrom(post){    
-    // if(post === this.curpost) {            
-    //   this.audioService.audio.currentTime = post.elapsed;
-    //   post.audioPlaying = true;
-    //   this.audioService.audio.play();
-    // }
+    if(post === this.audioService.curpost.getValue() && post.audioPlaying) {        
+      window.setTimeout(()=>{            
+        this.audioService.audio.currentTime = this.lastaudiopos;
+        post.audioPlaying = true;
+        this.audioService.audio.play();
+      }, 500);
+    }
   }
 
 }
