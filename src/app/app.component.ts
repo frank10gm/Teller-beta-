@@ -29,7 +29,8 @@ export class AppComponent {
         if (state === 1) {          
           this.router.navigate(['members', 'tabs']);
         }else if(state === 2){
-          this.router.navigate(['login']);
+          this.router.navigate(['members', 'tabs']);
+          // this.router.navigate(['login']);
         }else{
           this.router.navigate(['splash']);
         }
