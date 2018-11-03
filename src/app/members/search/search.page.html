@@ -6,7 +6,10 @@
 
 <ion-content>
 
-  <hw-post-card *ngFor="let post of posts$ | async" [post]="post"></hw-post-card>
+  <!-- <hw-post-card *ngFor="let post of posts$ | async" [post]="post"></hw-post-card> -->
+  <ion-virtual-scroll [items]="posts$ | async" approxItemHeight="324px">
+    <hw-post-card *virtualItem="let post" [post]="post"></hw-post-card>
+  </ion-virtual-scroll>
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="infiniteLoad($event)">
     <ion-infinite-scroll-content
