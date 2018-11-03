@@ -24,7 +24,7 @@
       <ion-button size="small" color="primary" fill="clear" expand="block" (click)="playPost(post)">
         <ion-icon class="big-icon" slot="start" [name]="(!post.audioPlaying) ? 'play' : 'pause'"></ion-icon>              
       </ion-button>       
-      <ion-range [disabled]="!post.audioEnabled" step="0.1" color="primary" mode="md" [value]="post.elapsed" [max]="post.duration" (mousedown)="pauseFrom(post)" (mouseup)="playFrom(post)" (ionChange)="audioChange($event, post)"></ion-range>
+      <ion-range [disabled]="!post.audioEnabled" step="0.1" color="primary" mode="md" [value]="post.elapsed" [max]="post.duration" (mousedown)="pauseFrom(post)" (touchstart)="pauseFrom(post)" (mouseup)="playFrom(post)" (touchend)="playFrom(post)" (ionChange)="audioChange($event, post)"></ion-range>
     </div>
   </ion-card-content>
   <ion-grid>
