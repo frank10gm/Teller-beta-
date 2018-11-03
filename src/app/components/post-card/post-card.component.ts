@@ -13,6 +13,7 @@ import { ApiService } from '../../services/api.service';
 export class PostCardComponent implements OnInit {
 
   @Input() post: any;
+  curpost: any;
   
   constructor(
     private toast: ToastController,
@@ -21,46 +22,61 @@ export class PostCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    
   }
 
   playPost(post){
     if(post.audioPlaying) {
-      this.audioService.audio.pause();    
+      this.audioService.audio.pause();
       post.audioPlaying = false;
-    }else{
-      if(this.audioService.audio.src != environment.mainEndpoint+'/uploads/audio/'+post.audio){
-        this.audioService.audio.src = environment.mainEndpoint+'/uploads/audio/'+post.audio; //'0aa1883c6411f7873cb83dacb17b0afc.m4a';
-        this.audioService.audio.load();  
+      return;
+    }
 
-        this.audioService.audio.ontimeupdate = (e) => {
-          this.handleTimeUpdate(post);
-        }
-  
-        this.audioService.audio.onended = (e) => {
-          post.audioPlaying = false;
-          post.currentTime = 0;
-          post.elapsed = 0;
-        }
-  
-        this.audioService.audio.onerror = (e) => {        
-          this.api.presentToast('There was an error with this audio file.')
-          post.audioEnabled = false;
-          post.audioPlaying = false;
-        }
+    if(post != this.curpost){
+      //assing new post
+      this.curpost = post;
 
-        this.audioService.audio.onloadeddata = (e) => {
-          if(post.elapsed) this.audioService.audio.currentTime = post.elapsed;          
-        }
-      }              
+      //pause previous
+      this.audioService.audio.pause();
+      this.curpost.audioPlaying = false;
+      
+      //load new one
+      this.audioService.audio.src = environment.mainEndpoint+'/uploads/audio/'+'0aa1883c6411f7873cb83dacb17b0afc.m4a'; //post.audio; //'0aa1883c6411f7873cb83dacb17b0afc.m4a';
+      this.audioService.audio.load();  
 
-      if(post.elapsed) this.audioService.audio.currentTime = post.elapsed;
-      if(post.elapsed >= post.duration){
-        this.audioService.audio.currentTime = 0;
+      //bind functions
+      this.audioService.audio.ontimeupdate = (e) => {
+        this.handleTimeUpdate(post);
       }
-      post.audioEnabled = true;
-      post.audioPlaying = true;            
-      this.audioService.audio.play();       
-    }           
+
+      this.audioService.audio.onended = (e) => {
+        post.audioPlaying = false;
+        post.currentTime = 0;
+        post.elapsed = 0;
+      }
+
+      this.audioService.audio.onerror = (e) => {        
+        this.api.presentToast('There was an error with this audio file.')
+        post.audioEnabled = false;
+        post.audioPlaying = false;
+      }
+
+      this.audioService.audio.onloadeddata = (e) => {
+        if(post.elapsed) this.audioService.audio.currentTime = post.elapsed;          
+      }
+    }                     
+
+    if(typeof post.elapsed != 'undefined') {
+      console.log('dev10', post.elapsed);
+      this.audioService.audio.currentTime = post.elapsed;      
+      if(post.elapsed <= 0.1) this.audioService.audio.currentTime = 0;
+      if(post.elapsed >= post.duration) this.audioService.audio.currentTime = 0;      
+    }    
+    
+    post.audioEnabled = true;
+    post.audioPlaying = true;            
+    this.audioService.audio.play();       
+          
   }
 
   handleTimeUpdate(post) {
@@ -72,11 +88,25 @@ export class PostCardComponent implements OnInit {
   }
 
   audioChange(e, post){        
-    post.elapsed = e.detail.value;    
+    console.log('dev11', post.elapsed);
+    post.elapsed = e.detail.value;     
+    console.log('dev12', post.elapsed);      
+  }
+
+  pauseFrom(post){    
+    // if(post === this.curpost) {
+    //   this.audioService.audio.pause();
+    //   post.audioPlaying = false;
+    //   this.audioService.audio.currentTime = post.elapsed;
+    // }
   }
 
   playFrom(post){    
-    // this.playPost(post);
+    // if(post === this.curpost) {            
+    //   this.audioService.audio.currentTime = post.elapsed;
+    //   post.audioPlaying = true;
+    //   this.audioService.audio.play();
+    // }
   }
 
 }
