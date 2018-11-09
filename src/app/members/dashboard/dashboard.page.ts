@@ -71,4 +71,9 @@ export class DashboardPage implements OnInit {
     //    
   }
 
+  identify(index, post){
+    console.log('dev11', index, post);
+    return post.id;
+  }
+
 }
